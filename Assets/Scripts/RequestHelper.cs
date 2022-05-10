@@ -51,6 +51,12 @@ public class RequestHelper
 
     private static UnityWebRequest CreatePostRequest(string url, string requestBody, string token, params Tuple<string, string>[] customHeader)
     {
+        byte[] rawBody = new UTF8Encoding().GetBytes(requestBody);
+        return CreatePostRequest(url, rawBody, token, customHeader);
+    }
+
+    private static UnityWebRequest CreatePostRequest(string url, byte[] requestBody, string token, params Tuple<string, string>[] customHeader)
+    {
         UnityWebRequest request = new UnityWebRequest
         {
             url = url,
@@ -61,8 +67,7 @@ public class RequestHelper
 
         if (requestBody != null)
         {
-            byte[] rawData = new UTF8Encoding().GetBytes(requestBody);
-            request.uploadHandler = new UploadHandlerRaw(rawData);
+            request.uploadHandler = new UploadHandlerRaw(requestBody);
         }
 
         if (token != null)
